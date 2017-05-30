@@ -48,7 +48,7 @@ def export_pdb_coords(file_path, coords_dict, seq_pos_dict, particle_size,
 
             c = 0
             seqPrev = None
-            for chromo in chromosomes:
+            for chromo, pos in seq_pos_dict.items():
                 if chromo.isdigit():
                     chain_code = ascii_uppercase[int(chromo) - 1]
                 elif len(chromo) == 1:
@@ -60,8 +60,10 @@ def export_pdb_coords(file_path, coords_dict, seq_pos_dict, particle_size,
                 if len(chromo) < 3:
                     resName = 'C' + resName.rjust(2, '_')
 
-                pos = seq_pos_dict[chromo]
-                coords = coords_dict[chromo][m]
+                try:
+                    coords = coords_dict[chromo][m]
+                except KeyError:
+                    continue
                 if len(pos) != len(coords):
                     raise ValueError("Sequence position and coordinates have different length.")
 
